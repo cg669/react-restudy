@@ -15,6 +15,22 @@
             width: 100%;
             overflow: hidden;
         }
+        .dog{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: aqua;
+        }
+        .cat{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: tomato;
+        }
+        .container{
+            width: 100%;
+            height: 100%;;
+        }
     </style>
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -24,7 +40,108 @@
 </head>
 <body>
     <div id="demo"></div>
+    <script>
+        /**
+            
+        通过问自己以下三个问题，你可以逐个检查相应数据是否属于 state：
+            1、该数据是否是由父组件通过 props 传递而来的？如果是，那它应该不是 state。
+            2、该数据是否随时间的推移而保持不变？如果是，那它应该也不是 state。
+            3、你能否根据其他 state 或 props 计算出该数据的值？如果是，那它也不是 state。
+        
+        比起写，代码更多地是给人看的。我们一起构建的这个模块化示例应用的代码就很适合阅读。
+        当你开始构建更大的组件库时，你会意识到这种代码模块化和清晰度的重要性。
+        并且随着代码重用程度的加深，你的代码行数也会显著地减少。:)
+        
+        static getDerivedStateFromError   //  渲染备用ui
+
+        下面是几个适合使用 refs 的情况：
+            1、管理焦点，文本选择或媒体播放。
+            2、触发强制动画。
+            3、集成第三方 DOM 库。
+        */
+    </script>
     <script type="text/babel">
+        function Dog({ mouse }){
+            return <div className="dog" style={{left: mouse.x, top: mouse.y}}></div>
+        }
+        function Cat({ mouse }) {
+            return <div className="cat" style={{left: mouse.x, top: mouse.y}}></div>
+        }
+        //  不可复用的话
+        class MouseWithDog extends React.Component{
+            state = {
+                x: 0,
+                y: 0
+            }
+            handleMouseMove = event => {
+                this.setState({
+                    x: event.clientX,
+                    y: event.clientY
+                })
+            }
+            render(){
+                return <div onMouseMove={this.handleMouseMove} className="container">
+                    <Dog mouse={this.state} />
+                </div>
+            }
+        }
+        function MouseTrackerOld() {
+            return <MouseWithDog />
+        }
+        //  此时要创建两个mouseWithCat
+        //  Other way -- render
+        class Mouse extends React.Component{
+            state = {
+                x: 0,
+                y: 0
+            }
+            handleMouseMove = event => {
+                this.setState({
+                    x: event.clientX,
+                    y: event.clientY
+                })
+            }
+            render(){
+                return <div onMouseMove={this.handleMouseMove} className="container">
+                    { this.props.render(this.state) }
+                </div>
+            }
+        }
+        function MouseTrackerNew() {
+            return <Mouse render={mouse => <Dog mouse={mouse}/>} />
+        }
+        ReactDOM.render(
+            <MouseTrackerNew/>,
+            document.getElementById('demo')
+        )
+        // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+        // import React, { Suspense, lazy } from 'react';
+
+        // const Home = lazy(() => import('./routes/Home'));
+        // const About = lazy(() => import('./routes/About'));
+
+        // const App = () => (
+        // <Router>
+        //     <Suspense fallback={<div>Loading...</div>}>
+        //         <Switch>
+        //             <Route exact path="/" component={Home}/>
+        //             <Route path="/about" component={About}/>
+        //         </Switch>
+        //     </Suspense>
+        // </Router>
+        // );
+        function hocFunc( WrapperComponent ) {
+            class Log extends React.Component{
+                componentDidUpdate(preProps){
+                    console.log(preProps,this.props)
+                }
+                render(){
+                    const { forwardRef, ...rest } = this.props
+                    return <WrapperComponent ref={forwardRef} {...rest}/>
+                }
+            }
+            return React.ForwardRef( (props,ref) => <Log forwardRef={ref} {...props} />)
+        }
         /**
          *    1、两个不同类型的元素会产生出不同的树；
          *    2、开发者可以通过 key prop 来暗示哪些子元素在不同的渲染下能保持稳定；
