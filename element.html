@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>元素</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0
+        }
+        html,body,#demo{
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // function tick() {
+        //     const ele = (
+        //         <div>
+        //             <h1>hello world!</h1>
+        //             <span>{new Date().toLocaleTimeString()}</span>
+        //         </div>
+        //     )
+        //     ReactDOM.render(ele,document.getElementById('root'))
+        // }
+        
+        // setInterval(tick, 1000);
+        function List( { list }) {
+            return list.map( el => <div key={el.toString()}>{el}</div>)
+        }
+        function Login({ handleLogin }){
+            return <React.Fragment>
+                <div>i am login</div>
+                <List list={[1,2,3,4,5]}/>
+                <button onClick={handleLogin}>点击退出登录</button>
+            </React.Fragment>
+        }
+        function Unlogin({ handleLogin }) {
+            return <React.Fragment>
+                <div>please login first</div>
+                <button onClick={handleLogin}>点击登录</button>
+            </React.Fragment>
+        }
+        class App extends React.Component{
+            state = {
+                isLogin: false
+            }
+            handleLogin = () => this.setState( (preState) => ({
+                isLogin: !preState.isLogin
+            }))
+            render(){
+                const { isLogin } = this.state
+                const props = {
+                    handleLogin: this.handleLogin
+                }
+                return isLogin ? <Login {...props} /> : <Unlogin {...props}/>
+            }
+        }
+        ReactDOM.render(<App/>,document.getElementById('root'))
+    </script>
+</body>
+</html>

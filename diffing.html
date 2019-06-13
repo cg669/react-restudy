@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Differ</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0
+        }
+        html,body,#demo{
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="demo"></div>
+    <script type="text/babel">
+        /**
+         *    1、两个不同类型的元素会产生出不同的树；
+         *    2、开发者可以通过 key prop 来暗示哪些子元素在不同的渲染下能保持稳定；
+         */
+         //  比对不同类型的元素 ---   从根节点比较，如果元素类型不同，从节点删除，重新装载新的  删除dom节点
+         //  同类型的元素  ===  只更改所更改的属性  保留dom节点
+         //  同类型的组件元素  ===  调用组件实例的ComponentWillRecevieProps 以及 ComponentWillUpdate方法，调用render时候diff算法 讲前后结果递归
+    </script>
+</body>
+</html> 
